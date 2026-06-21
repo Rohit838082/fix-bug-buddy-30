@@ -15,14 +15,15 @@ export const Route = createFileRoute("/")({
 });
 
 function Landing() {
-  const { user, role, loading } = useAuth();
+  const { user, role, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (loading) return;
-    if (user && role === "teacher") navigate({ to: "/teacher/dashboard" });
+    if (user && isAdmin) navigate({ to: "/admin" });
+    else if (user && role === "teacher") navigate({ to: "/teacher/dashboard" });
     else if (user && role === "student") navigate({ to: "/student/home" });
-  }, [user, role, loading, navigate]);
+  }, [user, role, isAdmin, loading, navigate]);
 
   const features = [
     { icon: MapPin, title: "GPS Geofencing", desc: "Define a precise classroom zone. Students must be inside the radius to mark present." },

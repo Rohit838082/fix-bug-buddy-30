@@ -12,17 +12,20 @@ export const Route = createFileRoute("/teacher")({
   component: TeacherLayout,
 });
 
+import { CreditCard } from "lucide-react";
+
 const items = [
   { to: "/teacher/dashboard", label: "Main", icon: LayoutDashboard },
   { to: "/teacher/create", label: "Create Class", icon: PlusCircle },
   { to: "/teacher/classes", label: "My Classes", icon: BookOpen },
   { to: "/teacher/reports", label: "Reports", icon: BarChart3 },
   { to: "/teacher/students", label: "Students", icon: Users },
+  { to: "/teacher/billing", label: "Billing", icon: CreditCard },
   { to: "/teacher/settings", label: "Settings", icon: Settings },
 ];
 
 function TeacherLayout() {
-  const { user, role, loading, signOut } = useAuth();
+  const { user, role, isAdmin, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { dark, toggle } = useDarkMode();
@@ -31,9 +34,10 @@ function TeacherLayout() {
   useEffect(() => {
     if (loading) return;
     if (!user) navigate({ to: "/auth" });
+    else if (isAdmin) navigate({ to: "/admin" });
     else if (role && role !== "teacher") navigate({ to: "/student/home" });
     else if (!role) navigate({ to: "/role" });
-  }, [user, role, loading, navigate]);
+  }, [user, role, isAdmin, loading, navigate]);
 
   useEffect(() => setMobileOpen(false), [path]);
 
