@@ -16,7 +16,7 @@ const nav = [
 ];
 
 function StudentLayout() {
-  const { user, role, loading, profileCompleted, signOut } = useAuth();
+  const { user, role, isAdmin, loading, profileCompleted, signOut } = useAuth();
   const navigate = useNavigate();
   const { dark, toggle } = useDarkMode();
   const path = useRouterState({ select: (s) => s.location.pathname });
@@ -24,12 +24,13 @@ function StudentLayout() {
   useEffect(() => {
     if (loading) return;
     if (!user) navigate({ to: "/auth" });
+    else if (isAdmin) navigate({ to: "/admin" });
     else if (role && role !== "student") navigate({ to: "/teacher/dashboard" });
     else if (!role) navigate({ to: "/role" });
     else if (profileCompleted === false && path !== "/student/profile") {
       navigate({ to: "/student/profile" });
     }
-  }, [user, role, loading, profileCompleted, path, navigate]);
+  }, [user, role, isAdmin, loading, profileCompleted, path, navigate]);
 
   const onLogout = async () => { await signOut(); navigate({ to: "/" }); };
 

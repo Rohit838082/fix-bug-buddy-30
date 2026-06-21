@@ -16,7 +16,7 @@ export const Route = createFileRoute("/role")({
 });
 
 function RolePage() {
-  const { user, role, loading, refreshRole } = useAuth();
+  const { user, role, isAdmin, loading, refreshRole } = useAuth();
   const navigate = useNavigate();
   const [busy, setBusy] = useState<"teacher" | "student" | null>(null);
   const [view, setView] = useState<"select" | "teacher-status">("select");
@@ -26,9 +26,10 @@ function RolePage() {
   useEffect(() => {
     if (loading) return;
     if (!user) navigate({ to: "/auth" });
+    else if (isAdmin) navigate({ to: "/admin" });
     else if (role === "teacher") navigate({ to: "/teacher/dashboard" });
     else if (role === "student") navigate({ to: "/student/home" });
-  }, [user, role, loading, navigate]);
+  }, [user, role, isAdmin, loading, navigate]);
 
   const loadStatus = useCallback(async () => {
     if (!user) return;

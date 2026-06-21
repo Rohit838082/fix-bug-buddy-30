@@ -16,7 +16,7 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
-  const { user, role, loading } = useAuth();
+  const { user, role, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
   const [busy, setBusy] = useState(false);
   const [googleBusy, setGoogleBusy] = useState(false);
@@ -27,11 +27,12 @@ function AuthPage() {
   useEffect(() => {
     if (loading) return;
     if (user) {
-      if (role === "teacher") navigate({ to: "/teacher/dashboard" });
+      if (isAdmin) navigate({ to: "/admin" });
+      else if (role === "teacher") navigate({ to: "/teacher/dashboard" });
       else if (role === "student") navigate({ to: "/student/home" });
       else navigate({ to: "/role" });
     }
-  }, [user, role, loading, navigate]);
+  }, [user, role, isAdmin, loading, navigate]);
 
   const onSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
