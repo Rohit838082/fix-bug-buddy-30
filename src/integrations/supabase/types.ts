@@ -242,6 +242,104 @@ export type Database = {
         }
         Relationships: []
       }
+      subscription_plans: {
+        Row: {
+          active: boolean
+          created_at: string
+          csv_export: boolean
+          currency: string
+          description: string
+          id: string
+          interval: string
+          max_classes: number
+          max_locations_per_class: number
+          max_students_per_class: number
+          name: string
+          price_cents: number
+          priority_support: boolean
+          sort_order: number
+          stripe_price_id: string | null
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          csv_export?: boolean
+          currency?: string
+          description?: string
+          id: string
+          interval?: string
+          max_classes?: number
+          max_locations_per_class?: number
+          max_students_per_class?: number
+          name: string
+          price_cents?: number
+          priority_support?: boolean
+          sort_order?: number
+          stripe_price_id?: string | null
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          csv_export?: boolean
+          currency?: string
+          description?: string
+          id?: string
+          interval?: string
+          max_classes?: number
+          max_locations_per_class?: number
+          max_students_per_class?: number
+          name?: string
+          price_cents?: number
+          priority_support?: boolean
+          sort_order?: number
+          stripe_price_id?: string | null
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean
+          created_at: string
+          current_period_end: string | null
+          plan_id: string
+          status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          plan_id?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          plan_id?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       teacher_requests: {
         Row: {
           created_at: string
@@ -296,6 +394,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_status: {
+        Row: {
+          reason: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          reason?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          reason?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -314,6 +433,32 @@ export type Database = {
           user_email: string
         }[]
       }
+      current_plan: {
+        Args: { _user_id: string }
+        Returns: {
+          active: boolean
+          created_at: string
+          csv_export: boolean
+          currency: string
+          description: string
+          id: string
+          interval: string
+          max_classes: number
+          max_locations_per_class: number
+          max_students_per_class: number
+          name: string
+          price_cents: number
+          priority_support: boolean
+          sort_order: number
+          stripe_price_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "subscription_plans"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       finalize_daily_attendance: { Args: never; Returns: undefined }
       get_class_password: { Args: { _class_id: string }; Returns: string }
       get_user_role: {
@@ -327,6 +472,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
       is_class_member: {
         Args: { _class_id: string; _user_id: string }
         Returns: boolean
