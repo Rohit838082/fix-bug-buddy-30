@@ -15,16 +15,19 @@ export function haversine(
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-export function generateClassId(): string {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+function randomFromAlphabet(alphabet: string, length: number): string {
+  const arr = new Uint8Array(length);
+  // Use Web Crypto CSPRNG (available in browsers and modern runtimes)
+  crypto.getRandomValues(arr);
   let s = "";
-  for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  for (let i = 0; i < length; i++) s += alphabet[arr[i] % alphabet.length];
   return s;
 }
 
+export function generateClassId(): string {
+  return randomFromAlphabet("ABCDEFGHJKLMNPQRSTUVWXYZ23456789", 6);
+}
+
 export function generatePassword(): string {
-  const chars = "abcdefghijkmnpqrstuvwxyz23456789";
-  let s = "";
-  for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
-  return s;
+  return randomFromAlphabet("abcdefghijkmnpqrstuvwxyz23456789", 6);
 }
