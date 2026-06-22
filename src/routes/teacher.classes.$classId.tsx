@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ClassLocationsManager } from "@/components/geopresent/ClassLocationsManager";
+import { TimePicker12h, format12h } from "@/components/time-picker-12h";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
@@ -340,7 +341,7 @@ function ClassDetail() {
         <div>
           <p className="text-xs uppercase tracking-wider text-muted-foreground">Class ID · {cls.id}</p>
           <h1 className="mt-1 text-3xl font-bold">{cls.name}</h1>
-          <p className="text-muted-foreground">{cls.subject || "—"} · {cls.section || "—"} · {cls.semester || "—"} · Radius {cls.radius}m{cls.attendance_end_time ? ` · Closes ${cls.attendance_end_time} IST` : ""}</p>
+          <p className="text-muted-foreground">{cls.subject || "—"} · {cls.section || "—"} · {cls.semester || "—"} · Radius {cls.radius}m{cls.attendance_end_time ? ` · Closes ${format12h(cls.attendance_end_time)} IST` : ""}</p>
           <p className="text-xs text-muted-foreground">Created {new Date(cls.created_at).toLocaleDateString()}</p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -415,7 +416,12 @@ function ClassDetail() {
             </div>
             <div>
               <Label>Attendance End Time (IST)</Label>
-              <Input type="time" value={editForm.attendance_end_time} onChange={(e) => setEditForm({ ...editForm, attendance_end_time: e.target.value })} />
+              <div className="mt-2">
+                <TimePicker12h
+                  value={editForm.attendance_end_time}
+                  onChange={(v) => setEditForm({ ...editForm, attendance_end_time: v })}
+                />
+              </div>
               <p className="mt-1 text-xs text-muted-foreground">Students cannot mark attendance after this time.</p>
             </div>
           </div>
