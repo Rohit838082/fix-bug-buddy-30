@@ -256,6 +256,7 @@ export type Database = {
           max_students_per_class: number
           name: string
           price_cents: number
+          price_cents_yearly: number
           priority_support: boolean
           sort_order: number
           stripe_price_id: string | null
@@ -273,6 +274,7 @@ export type Database = {
           max_students_per_class?: number
           name: string
           price_cents?: number
+          price_cents_yearly?: number
           priority_support?: boolean
           sort_order?: number
           stripe_price_id?: string | null
@@ -290,6 +292,7 @@ export type Database = {
           max_students_per_class?: number
           name?: string
           price_cents?: number
+          price_cents_yearly?: number
           priority_support?: boolean
           sort_order?: number
           stripe_price_id?: string | null
@@ -448,6 +451,7 @@ export type Database = {
           max_students_per_class: number
           name: string
           price_cents: number
+          price_cents_yearly: number
           priority_support: boolean
           sort_order: number
           stripe_price_id: string | null
