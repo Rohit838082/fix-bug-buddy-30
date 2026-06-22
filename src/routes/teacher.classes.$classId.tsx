@@ -416,7 +416,12 @@ function ClassDetail() {
             </div>
             <div>
               <Label>Attendance End Time (IST)</Label>
-              <Input type="time" value={editForm.attendance_end_time} onChange={(e) => setEditForm({ ...editForm, attendance_end_time: e.target.value })} />
+              <div className="mt-2">
+                <TimePicker12h
+                  value={editForm.attendance_end_time}
+                  onChange={(v) => setEditForm({ ...editForm, attendance_end_time: v })}
+                />
+              </div>
               <p className="mt-1 text-xs text-muted-foreground">Students cannot mark attendance after this time.</p>
             </div>
           </div>
