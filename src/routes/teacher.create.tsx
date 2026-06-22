@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { generateClassId, generatePassword } from "@/lib/distance";
+import { TimePicker12h } from "@/components/time-picker-12h";
 
 export const Route = createFileRoute("/teacher/create")({
   component: CreateClass,
