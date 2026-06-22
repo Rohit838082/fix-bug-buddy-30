@@ -341,7 +341,7 @@ function ClassDetail() {
         <div>
           <p className="text-xs uppercase tracking-wider text-muted-foreground">Class ID · {cls.id}</p>
           <h1 className="mt-1 text-3xl font-bold">{cls.name}</h1>
-          <p className="text-muted-foreground">{cls.subject || "—"} · {cls.section || "—"} · {cls.semester || "—"} · Radius {cls.radius}m{cls.attendance_end_time ? ` · Closes ${cls.attendance_end_time} IST` : ""}</p>
+          <p className="text-muted-foreground">{cls.subject || "—"} · {cls.section || "—"} · {cls.semester || "—"} · Radius {cls.radius}m{cls.attendance_end_time ? ` · Closes ${format12h(cls.attendance_end_time)} IST` : ""}</p>
           <p className="text-xs text-muted-foreground">Created {new Date(cls.created_at).toLocaleDateString()}</p>
         </div>
         <div className="flex flex-wrap gap-2">
