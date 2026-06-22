@@ -155,13 +155,12 @@ function CreateClass() {
 
         <div>
           <Label>Attendance end time (IST) *</Label>
-          <Input
-            type="time"
-            required
-            value={form.attendance_end_time}
-            onChange={(e) => setForm({ ...form, attendance_end_time: e.target.value })}
-            className="mt-2"
-          />
+          <div className="mt-2">
+            <TimePicker12h
+              value={form.attendance_end_time}
+              onChange={(v) => setForm({ ...form, attendance_end_time: v })}
+            />
+          </div>
           <p className="mt-1 text-xs text-muted-foreground">After this time, students cannot mark attendance and will be marked absent.</p>
         </div>
 
