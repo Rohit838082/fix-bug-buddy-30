@@ -55,9 +55,7 @@ function RolePage() {
   const pickStudent = async () => {
     if (!user) return;
     setBusy("student");
-    const { error } = await supabase
-      .from("user_roles")
-      .insert({ user_id: user.id, role: "student" });
+    const { error } = await supabase.rpc("claim_student_role");
     if (error) {
       setBusy(null);
       return toast.error(error.message);
