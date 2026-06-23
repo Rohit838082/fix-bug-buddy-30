@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_settings: {
+        Row: {
+          id: number
+          payment_instructions: string | null
+          payment_qr_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          payment_instructions?: string | null
+          payment_qr_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          payment_instructions?: string | null
+          payment_qr_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       attendance_records: {
         Row: {
           attendance_date: string
@@ -241,6 +262,59 @@ export type Database = {
           profile_completed?: boolean
         }
         Relationships: []
+      }
+      purchase_requests: {
+        Row: {
+          admin_notes: string | null
+          amount_cents: number
+          billing_interval: string
+          created_at: string
+          currency: string
+          decided_at: string | null
+          decided_by: string | null
+          id: string
+          plan_id: string
+          screenshot_url: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          amount_cents: number
+          billing_interval: string
+          created_at?: string
+          currency?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          id?: string
+          plan_id: string
+          screenshot_url: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          amount_cents?: number
+          billing_interval?: string
+          created_at?: string
+          currency?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          id?: string
+          plan_id?: string
+          screenshot_url?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchase_requests_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscription_plans: {
         Row: {

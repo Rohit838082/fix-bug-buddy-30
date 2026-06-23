@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, X, Pencil } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,6 +60,8 @@ function AdminPlans() {
 
   return (
     <div className="space-y-6">
+      <PaymentQrSettings />
+
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Plans</h1>
@@ -301,5 +303,112 @@ function EditPlanDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function PaymentQrSettings() {
+  const qc = useQueryClient();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [instructions, setInstructions] = useState<string>("");
+  const [uploading, setUploading] = useState(false);
+
+  const { data: settings } = useQuery({
+    queryKey: ["app-settings"],
+    queryFn: async () => {
+      const { data } = await supabase.from("app_settings" as any).select("*").eq("id", 1).maybeSingle();
+      const s = data as any;
+      setInstructions(s?.payment_instructions ?? "");
+      return s;
+    },
+  });
+  const { data: qrSignedUrl } = useQuery({
+    queryKey: ["qr-signed", settings?.payment_qr_url],
+    enabled: !!settings?.payment_qr_url,
+    queryFn: async () => {
+      const path = settings.payment_qr_url as string;
+      // path may already be a public/signed URL (legacy); only sign if it looks like a storage path
+      if (path.startsWith("http")) return path;
+      const { data } = await supabase.storage.from("payment-proofs").createSignedUrl(path, 60 * 60 * 24);
+      return data?.signedUrl ?? null;
+    },
+  });
+
+  const uploadQr = async (file: File) => {
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop()?.toLowerCase() || "png";
+      const path = `admin/qr-${Date.now()}.${ext}`;
+      const { error } = await supabase.storage.from("payment-proofs").upload(path, file, {
+        contentType: file.type, upsert: true,
+      });
+      if (error) throw error;
+      const { error: uerr } = await supabase
+        .from("app_settings" as any)
+        .update({ payment_qr_url: path, updated_at: new Date().toISOString() })
+        .eq("id", 1);
+      if (uerr) throw uerr;
+      toast.success("QR updated");
+      qc.invalidateQueries({ queryKey: ["app-settings"] });
+    } catch (e: any) {
+      toast.error(e.message ?? "Upload failed");
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  };
+
+  const saveInstructions = async () => {
+    const { error } = await supabase
+      .from("app_settings" as any)
+      .update({ payment_instructions: instructions, updated_at: new Date().toISOString() })
+      .eq("id", 1);
+    if (error) return toast.error(error.message);
+    toast.success("Instructions saved");
+    qc.invalidateQueries({ queryKey: ["app-settings"] });
+  };
+
+  return (
+    <div className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
+      <h2 className="text-lg font-bold">Payment QR</h2>
+      <p className="text-sm text-muted-foreground">
+        Shown to teachers when they click Purchase. Upload your UPI/PayPal QR image and optional instructions.
+      </p>
+      <div className="mt-4 grid gap-4 md:grid-cols-[200px,1fr]">
+        <div className="flex flex-col items-center gap-2">
+          {qrSignedUrl ? (
+            <img src={qrSignedUrl} alt="Payment QR" className="h-44 w-44 rounded-md border border-border bg-white object-contain p-2" />
+          ) : (
+            <div className="grid h-44 w-44 place-items-center rounded-md border border-dashed text-xs text-muted-foreground">
+              No QR uploaded
+            </div>
+          )}
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) uploadQr(f);
+            }}
+          />
+          <Button variant="outline" size="sm" onClick={() => fileRef.current?.click()} disabled={uploading}>
+            {uploading ? "Uploading…" : qrSignedUrl ? "Replace QR" : "Upload QR"}
+          </Button>
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label>Payment instructions (optional)</Label>
+          <textarea
+            className="min-h-[120px] w-full rounded-md border border-input bg-background p-2 text-sm"
+            placeholder="e.g. Pay using UPI ID xyz@oksbi, then upload the screenshot below."
+            value={instructions}
+            onChange={(e) => setInstructions(e.target.value)}
+          />
+          <div>
+            <Button onClick={saveInstructions} size="sm">Save instructions</Button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

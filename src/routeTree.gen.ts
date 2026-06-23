@@ -30,6 +30,7 @@ import { Route as StudentClassesRouteImport } from './routes/student.classes'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminTeacherRequestsRouteImport } from './routes/admin.teacher-requests'
 import { Route as AdminSubscriptionsRouteImport } from './routes/admin.subscriptions'
+import { Route as AdminPurchaseRequestsRouteImport } from './routes/admin.purchase-requests'
 import { Route as AdminPlansRouteImport } from './routes/admin.plans'
 import { Route as AdminClassesRouteImport } from './routes/admin.classes'
 import { Route as TeacherClassesIndexRouteImport } from './routes/teacher.classes.index'
@@ -143,6 +144,11 @@ const AdminSubscriptionsRoute = AdminSubscriptionsRouteImport.update({
   path: '/subscriptions',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminPurchaseRequestsRoute = AdminPurchaseRequestsRouteImport.update({
+  id: '/purchase-requests',
+  path: '/purchase-requests',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPlansRoute = AdminPlansRouteImport.update({
   id: '/plans',
   path: '/plans',
@@ -190,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/teacher': typeof TeacherRouteWithChildren
   '/admin/classes': typeof AdminClassesRoute
   '/admin/plans': typeof AdminPlansRoute
+  '/admin/purchase-requests': typeof AdminPurchaseRequestsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teacher-requests': typeof AdminTeacherRequestsRoute
   '/admin/users': typeof AdminUsersRoute
@@ -219,6 +226,7 @@ export interface FileRoutesByTo {
   '/teacher': typeof TeacherRouteWithChildren
   '/admin/classes': typeof AdminClassesRoute
   '/admin/plans': typeof AdminPlansRoute
+  '/admin/purchase-requests': typeof AdminPurchaseRequestsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teacher-requests': typeof AdminTeacherRequestsRoute
   '/admin/users': typeof AdminUsersRoute
@@ -250,6 +258,7 @@ export interface FileRoutesById {
   '/teacher': typeof TeacherRouteWithChildren
   '/admin/classes': typeof AdminClassesRoute
   '/admin/plans': typeof AdminPlansRoute
+  '/admin/purchase-requests': typeof AdminPurchaseRequestsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teacher-requests': typeof AdminTeacherRequestsRoute
   '/admin/users': typeof AdminUsersRoute
@@ -282,6 +291,7 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/admin/classes'
     | '/admin/plans'
+    | '/admin/purchase-requests'
     | '/admin/subscriptions'
     | '/admin/teacher-requests'
     | '/admin/users'
@@ -311,6 +321,7 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/admin/classes'
     | '/admin/plans'
+    | '/admin/purchase-requests'
     | '/admin/subscriptions'
     | '/admin/teacher-requests'
     | '/admin/users'
@@ -341,6 +352,7 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/admin/classes'
     | '/admin/plans'
+    | '/admin/purchase-requests'
     | '/admin/subscriptions'
     | '/admin/teacher-requests'
     | '/admin/users'
@@ -522,6 +534,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSubscriptionsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/purchase-requests': {
+      id: '/admin/purchase-requests'
+      path: '/purchase-requests'
+      fullPath: '/admin/purchase-requests'
+      preLoaderRoute: typeof AdminPurchaseRequestsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/plans': {
       id: '/admin/plans'
       path: '/plans'
@@ -577,6 +596,7 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminClassesRoute: typeof AdminClassesRoute
   AdminPlansRoute: typeof AdminPlansRoute
+  AdminPurchaseRequestsRoute: typeof AdminPurchaseRequestsRoute
   AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
   AdminTeacherRequestsRoute: typeof AdminTeacherRequestsRoute
   AdminUsersRoute: typeof AdminUsersRoute
@@ -586,6 +606,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminClassesRoute: AdminClassesRoute,
   AdminPlansRoute: AdminPlansRoute,
+  AdminPurchaseRequestsRoute: AdminPurchaseRequestsRoute,
   AdminSubscriptionsRoute: AdminSubscriptionsRoute,
   AdminTeacherRequestsRoute: AdminTeacherRequestsRoute,
   AdminUsersRoute: AdminUsersRoute,

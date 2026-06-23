@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, useNavigate, Link, useRouterState } from "@tan
 import { useEffect, useState } from "react";
 import {
   LayoutDashboard, Users, ShieldCheck, CreditCard, BookOpen, ListChecks,
-  LogOut, MapPin, Menu, Moon, Sun,
+  LogOut, MapPin, Menu, Moon, Sun, Receipt,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useDarkMode } from "@/lib/theme";
@@ -18,6 +18,7 @@ const items = [
   { to: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
   { to: "/admin/users", label: "Users", icon: Users },
   { to: "/admin/teacher-requests", label: "Teacher Requests", icon: ShieldCheck },
+  { to: "/admin/purchase-requests", label: "Purchase Requests", icon: Receipt },
   { to: "/admin/subscriptions", label: "Subscriptions", icon: CreditCard },
   { to: "/admin/classes", label: "Classes", icon: BookOpen },
   { to: "/admin/plans", label: "Plans", icon: ListChecks },
