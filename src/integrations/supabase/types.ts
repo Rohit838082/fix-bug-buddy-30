@@ -436,6 +436,7 @@ export type Database = {
           user_email: string
         }[]
       }
+      claim_student_role: { Args: never; Returns: undefined }
       current_plan: {
         Args: { _user_id: string }
         Returns: {
